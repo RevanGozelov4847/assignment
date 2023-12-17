@@ -1,13 +1,11 @@
-// components/FlashCardManagement.js
 import React, { useState } from 'react';
 
 const FlashCardManagement = ({ onAddCard }) => {
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
-  const [status, setStatus] = useState('Want to Learn'); // Default status
+  const [status, setStatus] = useState('Want to Learn');
 
   const handleAddCard = () => {
-    // Generate a new card object with the current date/time
     const newCard = {
       front,
       back,
@@ -15,13 +13,21 @@ const FlashCardManagement = ({ onAddCard }) => {
       status,
     };
 
-    // Call the callback function to add the new card
-    onAddCard(newCard);
-
-    // Reset input fields after adding a card
-    setFront('');
-    setBack('');
-    setStatus('Want to Learn');
+    fetch('http://localhost:3001/flashCards', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newCard),
+    })
+      .then(response => response.json())
+      .then(data => {
+        onAddCard(data);
+        setFront('');
+        setBack('');
+        setStatus('Want to Learn');
+      })
+      .catch(error => console.error('Error adding card:', error));
   };
 
   return (
