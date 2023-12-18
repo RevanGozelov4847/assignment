@@ -1,58 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const FlashCard = ({ card, onEdit, onDelete }) => {
-  const { id, front, back, lastModified, status } = card;
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedFront, setEditedFront] = useState(front);
-  const [editedBack, setEditedBack] = useState(back);
+const FlashCard = () => {
+  const [cards, setCards] = useState([]);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleFrontChange = (e) => {
-    setEditedFront(e.target.value);
-  };
-
-  const handleBackChange = (e) => {
-    setEditedBack(e.target.value);
-  };
-
-  const handleSave = () => {
-    setIsEditing(false);
-    onEdit(card, { id, front: editedFront, back: editedBack, lastModified, status });
-  };
-
-  const handleDelete = () => {
-    onDelete(card);
-  };
+  useEffect(() => {
+    fetch('http://localhost:3001/flashCards')
+      .then(response => response.json())
+      .then(data => setCards(data))
+      .catch(error => console.error('Error fetching flash cards:', error));
+  }, []);
 
   return (
-    <div className="flash-card">
-      <div className="front">
-        {isEditing ? (
-          <input type="text" value={editedFront} onChange={handleFrontChange} />
-        ) : (
-          <p>{front}</p>
-        )}
-      </div>
-      <div className="back">
-        {isEditing ? (
-          <input type="text" value={editedBack} onChange={handleBackChange} />
-        ) : (
-          <p>{back}</p>
-        )}
-        <p>Last Modified: {lastModified}</p>
-        <p>Status: {status}</p>
-        {isEditing ? (
-          <button onClick={handleSave}>Save</button>
-        ) : (
-          <div>
-            <button onClick={handleEdit}>Edit</button>
-            <button onClick={handleDelete}>Delete</button>
-          </div>
-        )}
-      </div>
+    <div>
+      <h1>Flash Cards</h1>
+      <ul>
+        {cards.map(card => (
+          <li key={card.id}>
+            <div>
+              <strong>Front:</strong> {card.question}
+            </div>
+            <div>
+              <strong>Back:</strong> {card.answer}
+            </div>
+            <div>
+              <strong>Last Modified:</strong> {card.lastModified}
+            </div>
+            <div>
+              <strong>Status:</strong> {card.status}
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

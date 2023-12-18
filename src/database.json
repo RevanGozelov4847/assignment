@@ -1,6 +1,0 @@
-{
-  "flashcards": [
-    { "id": 1, "question": "What is CSS?", "answer": "Cascading Style Sheets for styling."},
-    { "id": 1, "question": "What is HTML?", "answer": "Hypertext Markup Language for structuring." }
-  ]
-}
