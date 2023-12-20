@@ -1,36 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const FlashCard = () => {
-  const [cards, setCards] = useState([]);
+const FlashCard = ({ card }) => {
+  const { question, answer, lastModified } = card;
+  const [isFlipped, setFlipped] = useState(false);
 
-  useEffect(() => {
-    fetch('http://localhost:3001/flashCards')
-      .then(response => response.json())
-      .then(data => setCards(data))
-      .catch(error => console.error('Error fetching flash cards:', error));
-  }, []);
+  const handleCardClick = () => {
+    setFlipped(!isFlipped);
+  };
 
   return (
-    <div>
-      <h1>Flash Cards</h1>
-      <ul>
-        {cards.map(card => (
-          <li key={card.id}>
-            <div>
-              <strong>Front:</strong> {card.question}
-            </div>
-            <div>
-              <strong>Back:</strong> {card.answer}
-            </div>
-            <div>
-              <strong>Last Modified:</strong> {card.lastModified}
-            </div>
-            <div>
-              <strong>Status:</strong> {card.status}
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className={`flash-card ${isFlipped ? 'flipped' : ''}`} onClick={handleCardClick}>
+      <div className="card-face card-front">
+        <div>{question}</div>
+        <div>Last Modified: {new Date(lastModified).toLocaleString()}</div>
+      </div>
+      {isFlipped && (
+        <div className="card-face card-back">
+          <div>{answer}</div>
+          <div>Last Modified: {new Date(lastModified).toLocaleString()}</div>
+        </div>
+      )}
     </div>
   );
 };
