@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import FlashCards from './components/FlashCards';
 import { FlashCardsProvider } from './context/FlashCardsContext';
+import "./assets/scss/main.scss"
 
 const App = () => {
   return (
