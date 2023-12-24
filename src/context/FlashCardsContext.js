@@ -13,7 +13,6 @@ export const useFlashCardsContext = () => {
 };
 
 export const FlashCardsProvider = ({ children }) => {
-  const [flashCards, setFlashCards] = useState([]);
 
   useEffect(() => {
     fetch('http://localhost:3001/flashCards')
@@ -51,6 +50,8 @@ export const FlashCardsProvider = ({ children }) => {
       )
       .catch((error) => console.error('Error updating flash card:', error));
   };
+  const [flashCards, setFlashCards] = useState([]);
+  
 
   const deleteFlashCard = (cardId) => {
     fetch(`http://localhost:3001/flashCards/${cardId}`, {
@@ -61,8 +62,8 @@ export const FlashCardsProvider = ({ children }) => {
   };
 
   return (
-    <FlashCardsContext.Provider value={{ flashCards, addFlashCard, updateFlashCard, deleteFlashCard }}>
-      {children}
-    </FlashCardsContext.Provider>
+    <FlashCardsContext.Provider value={{ flashCards, addFlashCard, updateFlashCard, deleteFlashCard, setFlashCards }}>
+    {children}
+  </FlashCardsContext.Provider>
   );
 };

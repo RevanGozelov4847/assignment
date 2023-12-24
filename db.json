@@ -1,42 +1,40 @@
 {
   "flashCards": [
     {
-      "question": "sualasdsdadsads",
-      "answer": "asdadsdadsadss",
-      "status": "Want to Learn",
+      "question": "question1",
+      "answer": "answer1",
+      "status": "Noted",
       "id": 1702932179224,
       "isFlipped": false,
-      "lastModified": "2023-12-23T04:01:35.980Z"
+      "lastModified": "2023-12-24T05:36:38.573Z"
     },
     {
       "id": 1702969910596,
-      "question": "wa",
-      "answer": "ASASDASD",
-      "status": "Want to Learn",
-      "lastModified": "2023-12-21T05:57:55.341Z"
+      "question": "question2",
+      "answer": "answer2",
+      "status": "Noted",
+      "lastModified": "2023-12-24T02:19:59.546Z"
     },
     {
       "id": 1703133470041,
-      "question": "q",
-      "answer": "q",
+      "question": "question3",
+      "answer": "answer3",
       "status": "Want to Learn",
       "lastModified": "2023-12-23T17:33:49.179Z"
-    },
-    {
-      "id": 1703138286144,
-      "question": "ngvm",
-      "answer": "hvkm",
-      "status": "Want to Learn",
-      "lastModified": "2023-12-21T05:58:06.144Z"
-    },
-    {
-      "id": 1703304328049,
-      "question": "r",
-      "answer": "r",
-      "status": "Want to Learn",
-      "lastModified": "2023-12-23T17:33:33.867Z"
     }
   ],
-  "messages": []
-
+  "messages": [
+    {
+      "subject": "sadsad",
+      "email": "revanbulud@gmail.com",
+      "content": "adsdas",
+      "id": 1
+    },
+    {
+      "subject": "",
+      "email": "",
+      "content": "",
+      "id": 2
+    }
+  ]
 }

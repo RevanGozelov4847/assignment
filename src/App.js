@@ -1,19 +1,21 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import FlashCards from './components/FlashCards';
-import { FlashCardsProvider } from './context/FlashCardsContext';
-import Navbar from './components/Navbar'; // Import the Navbar component
-import './assets/scss/main.scss';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import FlashCards from "./pages/FlashCards";
+import { FlashCardsProvider } from "./context/FlashCardsContext";
+import Navbar from "./components/Navbar";
+import "./assets/scss/main.scss";
+import ContactPage from "./pages/ContactPage";
 
 const App = () => {
   return (
     <Router>
       <FlashCardsProvider>
-        <Navbar /> {/* Include the Navbar component */}
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/flash-cards" element={<FlashCards />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </FlashCardsProvider>
     </Router>

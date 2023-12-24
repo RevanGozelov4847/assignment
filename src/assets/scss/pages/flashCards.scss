@@ -1,0 +1,123 @@
+.flash-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .flash-card-container {
+    width: calc(25% - 20px); 
+    margin-bottom: 20px;
+    box-sizing: border-box; 
+ }
+  
+  .flash-card {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .flash-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .flash-card .card-face {
+    padding: 16px;
+  }
+  
+  .flash-card .card-front {
+    background-color: #314f73;
+  }
+  
+  .flash-card .card-back {
+    background-color: #3c7888;
+  }
+  
+  .card-info {
+    margin-bottom: 10px;
+  }
+  
+  .card-text {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .last-modified-text {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .edit-btn,
+  .delete-btn {
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .selected {
+    border: 2px solid #e74c3c;
+  }
+  
+  .flash-cards-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .new-card-button {
+    margin-right: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .search-bar,
+  .sort-inputs {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-bar {
+    flex-grow: 2; 
+  }
+  
+  .sort-inputs,
+  .share-button {
+    margin-right: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .flash-card-container {
+      width: calc(50% - 20px); 
+    }
+  
+    .flash-cards-header {
+      flex-wrap: wrap;
+    }
+  
+    .new-card-button,
+    .search-bar,
+    .sort-inputs,
+    .share-button {
+      margin-bottom: 10px;
+      flex-basis: 100%;
+    }
+  }
+  

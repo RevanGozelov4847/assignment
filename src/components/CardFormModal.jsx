@@ -1,8 +1,8 @@
 import React from 'react';
 
-const CardFormModal = ({ isNewCard, card, onClose, onSave, onChange }) => {
+const CardFormModal = ({ isNewCard, card, onClose, onSave, onChange, isEditing }) => {
   return (
-    <div className="modal">
+    <div className={`modal ${isEditing ? 'edit-mode' : ''}`}>
       <div className="modal-content">
         <span className="close" onClick={onClose}>&times;</span>
         <h2>{isNewCard ? 'Create New Card' : 'Edit Card'}</h2>
