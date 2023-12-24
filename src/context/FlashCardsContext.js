@@ -1,69 +1,57 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useReducer } from 'react';
+
+const initialState = {
+  cards: [],
+};
+
+const ActionTypes = {
+  SET_CARDS: 'SET_CARDS',
+  ADD_CARD: 'ADD_CARD',
+  UPDATE_CARD: 'UPDATE_CARD',
+  DELETE_CARD: 'DELETE_CARD',
+};
+
+const flashCardsReducer = (state, action) => {
+  switch (action.type) {
+    case ActionTypes.SET_CARDS:
+      return { ...state, cards: action.payload };
+    case ActionTypes.ADD_CARD:
+      return { ...state, cards: [...state.cards, action.payload] };
+    case ActionTypes.UPDATE_CARD:
+      return {
+        ...state,
+        cards: state.cards.map((card) =>
+          card.id === action.payload.id ? action.payload : card
+        ),
+      };
+    case ActionTypes.DELETE_CARD:
+      return {
+        ...state,
+        cards: state.cards.filter((card) => card.id !== action.payload),
+      };
+    default:
+      return state;
+  }
+};
 
 const FlashCardsContext = createContext();
 
-export const useFlashCardsContext = () => {
+const useFlashCards = () => {
   const context = useContext(FlashCardsContext);
-
   if (!context) {
-    throw new Error('useFlashCardsContext must be used within a FlashCardsProvider');
+    throw new Error('useFlashCards must be used within a FlashCardsProvider');
   }
-
   return context;
 };
 
-export const FlashCardsProvider = ({ children }) => {
-
-  useEffect(() => {
-    fetch('http://localhost:3001/flashCards')
-      .then((response) => response.json())
-      .then((data) => setFlashCards(data))
-      .catch((error) => console.error('Error fetching flash cards:', error));
-  }, []); 
-
-  const addFlashCard = (newCard) => {
-    fetch('http://localhost:3001/flashCards', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newCard),
-    })
-      .then((response) => response.json())
-      .then((data) => setFlashCards((prevCards) => [...prevCards, data]))
-      .catch((error) => console.error('Error adding flash card:', error));
-  };
-
-  const updateFlashCard = (updatedCard) => {
-    fetch(`http://localhost:3001/flashCards/${updatedCard.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedCard),
-    })
-      .then((response) => response.json())
-      .then((data) =>
-        setFlashCards((prevCards) =>
-          prevCards.map((card) => (card.id === data.id ? data : card))
-        )
-      )
-      .catch((error) => console.error('Error updating flash card:', error));
-  };
-  const [flashCards, setFlashCards] = useState([]);
-  
-
-  const deleteFlashCard = (cardId) => {
-    fetch(`http://localhost:3001/flashCards/${cardId}`, {
-      method: 'DELETE',
-    })
-      .then(() => setFlashCards((prevCards) => prevCards.filter((card) => card.id !== cardId)))
-      .catch((error) => console.error('Error deleting flash card:', error));
-  };
+const FlashCardsProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(flashCardsReducer, initialState);
 
   return (
-    <FlashCardsContext.Provider value={{ flashCards, addFlashCard, updateFlashCard, deleteFlashCard, setFlashCards }}>
-    {children}
-  </FlashCardsContext.Provider>
+    <FlashCardsContext.Provider value={{ state, dispatch }}>
+      {children}
+    </FlashCardsContext.Provider>
   );
 };
+
+export { FlashCardsProvider, useFlashCards, ActionTypes };

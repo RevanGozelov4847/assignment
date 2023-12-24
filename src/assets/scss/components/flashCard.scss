@@ -1,92 +1,144 @@
-// FlashCard.scss
-
-.flash-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.flash-card-container {
-  width: calc(25% - 20px); 
-  margin-bottom: 20px;
-  box-sizing: border-box; 
-}
-
 .flash-card {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
   position: relative;
+  width: 200px;
+  height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.5s ease;
+  perspective: 1000px;
+  .card-header {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+  }
 
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
   &:hover {
-    transform: scale(1.05);
+    .card-actions {
+      display: flex;
+    }
+  }
+
+  &.hovered {
+    transform: scale(1.01);
   }
 
   &.flipped {
     transform: rotateY(180deg);
   }
 
-  &.selected {
-    border: 2px solid #2ecc71;
+  .front,
+  .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 18px;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
   }
 
-  .card-face {
-    padding: 16px;
-    cursor: pointer;
-    position: relative;
+  .front {
+    background-color: #4caf50;
+    color: white;
+    display: flex;
+    flex-direction: column;
 
-    .card-info {
+    .additional-info {
+      transform: rotateY(180deg);
+      margin-top: 10px;
+      font-size: 12px;
+      color: #ccc;
+      p {
+        transform: rotateY(180deg);
+      }
+    }
+
+    .front-actions {
+      .edit-delete-wrapper {
+        transform: rotateY(180deg);
+      }
+    }
+
+    .non-transformed-text {
+      transform: rotateY(360deg);
+    }
+
+    .edit-inputs {
       display: flex;
       flex-direction: column;
       align-items: center;
-
-      .card-text {
-        background-color: #314f73;
-        color: #fff;
-        padding: 10px;
-        border-radius: 4px;
-        margin-bottom: 10px;
+      margin-top: 10px;
+      width: 100px;
+      input,
+      select {
+        margin-bottom: 5px;
+        width: 100px;
       }
-
-      .last-modified-text {
-        color: #777;
+    
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    
+        &:hover {
+          background-color: #45a049;
+        }
       }
     }
+    
+    .front:hover .edit-inputs {
+      display: flex;
+    }
+  }    
+  .back {
+    background-color: #f44336;
+    color: white;
+    display: flex;
+    flex-direction: column;
   }
 
-  .card-back {
-    background-color: #3c7888;
+  .non-transformed-text {
     transform: rotateY(180deg);
   }
 
-  .card-checkbox {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  .additional-info {
+    transform: rotateY(180deg);
+    margin-top: 10px;
+    font-size: 12px;
+    color: #ccc;
   }
 
-  &.clicked {
+  .card-actions,
+  .front-actions {
     transform: rotateY(180deg);
   }
-}
 
-.card-actions {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease; 
-
-  button {
-    margin: 0 5px;
-    background-color: #2ecc71;
-    color: #fff;
+  .edit-delete-wrapper button {
+    background-color: #4caf50;
+    color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 5px 10px;
+    border-radius: 5px;
     cursor: pointer;
-    border-radius: 4px;
+    margin-bottom: 5px;
+
+    &:hover {
+      background-color: #45a049;
+    }
   }
 }
