@@ -7,8 +7,13 @@ import Navbar from "./components/Navbar";
 import "./assets/scss/main.scss";
 import ContactPage from "./pages/ContactPage";
 
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 const App = () => {
   return (
+    <DndProvider backend={HTML5Backend}>
+
     <Router>
       <FlashCardsProvider>
         <Navbar />
@@ -19,7 +24,10 @@ const App = () => {
         </Routes>
       </FlashCardsProvider>
     </Router>
+    </DndProvider>
+
   );
+  
 };
 
 export default App;
