@@ -1,59 +1,57 @@
 import React, { useState } from 'react';
 
-const FlashCard = ({ onEdit, onDelete }) => {
-  const [isFlipped, setFlipped] = useState(false);
-  const [isCheckboxChecked, setCheckboxChecked] = useState(false);
-  const [isHovered, setHovered] = useState(false);
+const FlashCard = ({
+  id,
+  question,
+  answer,
+  status,
+  lastModified,
+  onEdit,
+  onDelete,
+  onCheckboxChange,
+  isChecked,
+}) => {
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const handleCardClick = () => {
-    setFlipped(!isFlipped);
-  };
-
-  const handleCheckboxChange = () => {
-    setCheckboxChecked(!isCheckboxChecked);
-  };
-
-  const handleMouseEnter = () => {
-    setHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setHovered(false);
+    setIsFlipped(!isFlipped);
   };
 
   return (
-    <div
-      className={`flash-card ${isFlipped ? 'flipped' : ''} ${
-        isCheckboxChecked ? 'checkbox-checked' : ''
-      } ${isHovered ? 'hovered' : ''}`}
-      onClick={handleCardClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="card-checkbox-container">
-        <input
-          type="checkbox"
-          className="card-checkbox"
-          onChange={handleCheckboxChange}
-          checked={isCheckboxChecked}
-        />
-      </div>
-      <div className="card-face card-front">
-        {isHovered && (
-          <div className="card-actions">
-            <button type="button" onClick={onEdit}>
-              Edit Card
-            </button>
-            <button type="button" onClick={onDelete}>
-              Delete Card
-            </button>
-          </div>
-        )}
-      </div>
-      <div className={`card-face card-back ${isFlipped ? 'clicked' : ''}`}>
+    <div className="flash-card-container" onClick={handleCardClick}>
+      <div className={`flash-card ${isFlipped ? 'flipped' : ''}`}>
+        <div className="card-face card-front">
+          <p>{question}</p>
+        </div>
+        <div className="card-face card-back">
+          <p>{answer}</p>
+        </div>
+        <div className="card-actions">
+          <button type="button" onClick={() => onEdit(id)}>
+            Edit Card
+          </button>
+          <button type="button" onClick={() => onDelete(id)}>
+            Delete Card
+          </button>
+        </div>
+        <label>
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={onCheckboxChange}
+          />
+          Select
+        </label>
+        <div className="card-status">{status}</div>
+        <div className="card-last-modified">Last Modified: {lastModified}</div>
       </div>
     </div>
   );
 };
 
 export default FlashCard;
+
+
+
+
+

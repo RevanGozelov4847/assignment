@@ -1,19 +1,18 @@
 {
   "flashCards": [
     {
+      "id": 1703133470041,
       "question": "question1",
       "answer": "answer1",
-      "status": "Noted",
-      "id": 1702932179224,
-      "isFlipped": false,
-      "lastModified": "2023-12-24T05:36:38.573Z"
+      "status": "Want to Learn",
+      "lastModified": "2023-12-23T17:33:49.179Z"
     },
     {
-      "id": 1702969910596,
+      "id": 1703133470041,
       "question": "question2",
       "answer": "answer2",
-      "status": "Noted",
-      "lastModified": "2023-12-24T02:19:59.546Z"
+      "status": "Want to Learn",
+      "lastModified": "2023-12-23T17:33:49.179Z"
     },
     {
       "id": 1703133470041,

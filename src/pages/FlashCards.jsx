@@ -75,24 +75,19 @@ const FlashCards = () => {
     setCheckedCards((prevChecked) => prevChecked.filter((id) => id !== cardId));
   };
 
-  const toggleCardFlip = (cardId, event) => {
-    const isCheckboxClick = event.target.classList.contains("card-checkbox");
+const toggleCardFlip = (cardId) => {
+  setFlippedCards((prevFlippedCards) => ({
+    ...prevFlippedCards,
+    [cardId]: !prevFlippedCards[cardId],
+  }));
 
-    if (!isCheckboxClick) {
-      event.stopPropagation();
+  setCheckedCards((prevChecked) =>
+    prevChecked.includes(cardId)
+      ? prevChecked.filter((id) => id !== cardId)
+      : [...prevChecked, cardId]
+  );
+};
 
-      setFlippedCards((prevFlippedCards) => ({
-        ...prevFlippedCards,
-        [cardId]: !prevFlippedCards[cardId],
-      }));
-
-      setCheckedCards((prevChecked) =>
-        prevChecked.includes(cardId)
-          ? prevChecked.filter((id) => id !== cardId)
-          : [...prevChecked, cardId]
-      );
-    }
-  };
 
   const toggleCardCheck = (cardId) => {
     setCheckedCards((prevChecked) =>
@@ -160,10 +155,16 @@ const FlashCards = () => {
     if (draggedCardId !== targetCardId) {
       const updatedCards = flashCards.map((card) => {
         if (card.id === draggedCardId) {
-          return { ...card, order: flashCards.find((c) => c.id === targetCardId).order };
+          return {
+            ...card,
+            order: flashCards.find((c) => c.id === targetCardId).order,
+          };
         }
         if (card.id === targetCardId) {
-          return { ...card, order: flashCards.find((c) => c.id === draggedCardId).order };
+          return {
+            ...card,
+            order: flashCards.find((c) => c.id === draggedCardId).order,
+          };
         }
         return card;
       });
@@ -237,54 +238,53 @@ const FlashCards = () => {
       </div>
 
       <div className="flash-cards-container">
-        {filteredAndSortedCards.map((card, index) => (
-          <div
-            key={card.id}
-            className="flash-card-container"
-            draggable
-            onDragStart={() => handleDragStart(card.id)}
-            onDragOver={(e) => handleDragOver(e)}
-            onDrop={() => handleDrop(card.id)}
-          >
-            <div
-              className={`flash-card ${
-                flippedCards[card.id] ? "flipped" : ""
-              } ${checkedCards.includes(card.id) ? "selected" : ""}`}
-            >
-              <input
-                type="checkbox"
-                className="card-checkbox"
-                checked={checkedCards.includes(card.id)}
-                onChange={() => toggleCardCheck(card.id)}
-              />
+      {filteredAndSortedCards.map((card, index) => (
+  <div
+    key={card.id}
+    className="flash-card-container"
+    draggable
+    onDragStart={() => handleDragStart(card.id)}
+    onDragOver={(e) => handleDragOver(e)}
+    onDrop={() => handleDrop(card.id)}
+    onClick={() => toggleCardFlip(card.id)} // Updated this line
+  >
+    <div
+      className={`flash-card ${
+        flippedCards[card.id] ? "flipped" : ""
+      } ${checkedCards.includes(card.id) ? "selected" : ""}`}
+    >
+      <input
+        type="checkbox"
+        className="card-checkbox"
+        checked={checkedCards.includes(card.id)}
+        onChange={() => toggleCardCheck(card.id)}
+      />
 
-              <div
-                className="card-face card-front"
-                onClick={(event) => toggleCardFlip(card.id, event)}
-              >
-                <div className="card-info">
-                  <div className="card-text">{card.question}</div>
-                  <div className="last-modified-text">
-                    Last Modified: {new Date(card.lastModified).toLocaleString()}
-                  </div>
-                </div>
-                {checkedCards.includes(card.id) && renderCardActions(card)}
-              </div>
-              <div
-                className="card-face card-back"
-                onClick={(event) => toggleCardFlip(card.id, event)}
-              >
-                <div className="card-info">
-                  <div className="card-text">{card.answer}</div>
-                  <div className="last-modified-text">
-                    Last Modified: {new Date(card.lastModified).toLocaleString()}
-                  </div>
-                </div>
-                {checkedCards.includes(card.id) && renderCardActions(card)}
-              </div>
-            </div>
+      <div className="card-face">
+        <div className="card-info">
+          <div className="card-text">{card.question}</div>
+          <div className="last-modified-text">
+            Last Modified: {new Date(card.lastModified).toLocaleString()}
           </div>
-        ))}
+        </div>
+        {checkedCards.includes(card.id) && renderCardActions(card)}
+      </div>
+      <div
+        className="card-face card-back"
+        onClick={(event) => toggleCardFlip(card.id, event)}
+      >
+        <div className="card-info">
+          <div className="card-text">{card.answer}</div>
+          <div className="last-modified-text">
+            Last Modified: {new Date(card.lastModified).toLocaleString()}
+          </div>
+        </div>
+        {checkedCards.includes(card.id) && renderCardActions(card)}
+      </div>
+    </div>
+  </div>
+))}
+
       </div>
 
       {isModalOpen && (
@@ -293,7 +293,9 @@ const FlashCards = () => {
           card={newCard}
           onClose={() => setModalOpen(false)}
           onSave={handleCreateCard}
-          onChange={(field, value) => setNewCard((prevCard) => ({ ...prevCard, [field]: value }))}
+          onChange={(field, value) =>
+            setNewCard((prevCard) => ({ ...prevCard, [field]: value }))
+          }
         />
       )}
 
