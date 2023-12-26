@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFlashCards, ActionTypes } from "../context/FlashCardsContext";
 import FlashCard from "../components/FlashCard";
+import { Modal, EditForm } from "../components/Modal";
 
 const FlashCards = () => {
   const { state, dispatch } = useFlashCards();
@@ -14,13 +15,11 @@ const FlashCards = () => {
   const [statusFilter, setStatusFilter] = useState("All");
   const [sortCriteria, setSortCriteria] = useState("front");
   const [selectedCards, setSelectedCards] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:3001/flashCards")
-      .then((response) => response.json())
-      .then((data) => dispatch({ type: ActionTypes.SET_CARDS, payload: data }))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [dispatch]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [dragState, setDragState] = useState({
+    draggedIndex: null,
+    hoverIndex: null,
+  });
 
   const handleCreate = () => {
     const currentTime = new Date().toISOString();
@@ -53,14 +52,14 @@ const FlashCards = () => {
     setNewCard({ front: "", back: "", status: "Noted" });
   };
 
-  const handleEdit = () => {
-    const currentTime = new Date().toISOString(); 
+  const handleEdit = (editedCard) => {
+    const currentTime = new Date().toISOString();
     const updatedCard = {
-      ...editCard,
+      ...editedCard,
       lastModified: currentTime,
     };
 
-    fetch(`http://localhost:3001/flashCards/${editCard.id}`, {
+    fetch(`http://localhost:3001/flashCards/${editedCard.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -81,6 +80,7 @@ const FlashCards = () => {
       .catch((error) => console.error("Error updating card:", error));
 
     setEditCard(null);
+    setIsEditing(false);
   };
 
   const handleDelete = (id) => {
@@ -121,6 +121,35 @@ const FlashCards = () => {
     )}`;
   };
 
+  const handleDrop = (draggedIndex, hoverIndex) => {
+    const updatedCards = [...state.cards];
+    const [draggedCard] = updatedCards.splice(draggedIndex, 1);
+    updatedCards.splice(hoverIndex, 0, draggedCard);
+
+    // Update local state with the new card order
+    dispatch({ type: ActionTypes.SET_CARDS, payload: updatedCards });
+
+    // Update local storage with the new card order
+    localStorage.setItem(
+      "flashCardOrder",
+      JSON.stringify(updatedCards.map((card) => card.id))
+    );
+
+    // Update the card order directly in the db.json file using json-server
+    fetch("http://localhost:3001/cardOrder", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedCards.map((card) => card.id)),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Card order updated in db.json:", data))
+      .catch((error) => console.error("Error updating card order:", error));
+
+    setDragState({ draggedIndex: null, hoverIndex: null });
+  };
+
   const filteredCards = state.cards.filter((card) => {
     if (statusFilter !== "All" && card.status !== statusFilter) {
       return false;
@@ -145,6 +174,13 @@ const FlashCards = () => {
     }
     return 0;
   });
+
+  useEffect(() => {
+    fetch("http://localhost:3001/flashCards")
+      .then((response) => response.json())
+      .then((data) => dispatch({ type: ActionTypes.SET_CARDS, payload: data }))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [dispatch]);
 
   return (
     <div className="flash-cards-container">
@@ -201,56 +237,43 @@ const FlashCards = () => {
         </div>
       </div>
       <div className="cards">
-        {sortedCards.map((card) => (
-          <div key={card.id} className="flash-card-wrapper">
-            {editCard && editCard.id === card.id ? (
-              <>
-                <input
-                  type="text"
-                  value={editCard.front}
-                  onChange={(e) =>
-                    setEditCard({ ...editCard, front: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  value={editCard.back}
-                  onChange={(e) =>
-                    setEditCard({ ...editCard, back: e.target.value })
-                  }
-                />
-                <select
-                  value={editCard.status}
-                  onChange={(e) =>
-                    setEditCard({ ...editCard, status: e.target.value })
-                  }
-                >
-                  <option value="Learned">Learned</option>
-                  <option value="Want to Learn">Want to Learn</option>
-                  <option value="Noted">Noted</option>
-                </select>
-                <button onClick={handleEdit}>Save</button>
-              </>
-            ) : (
-              <FlashCard
-                card={card}
-                onEdit={(editedCard) => setEditCard(editedCard)}
-                onDelete={handleDelete}
-                onSelect={() => handleSelect(card)}
-                isSelected={selectedCards.some((c) => c.id === card.id)}
-              />
-            )}
+        {sortedCards.map((card, index) => (
+          <div
+            key={card.id}
+            className={`flash-card-wrapper ${dragState.draggedIndex === index ? "dragged" : ""}`}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => handleDrop(dragState.draggedIndex, index)}
+          >
+            <FlashCard
+              card={card}
+              onEdit={() => {
+                setEditCard(card);
+                setIsEditing(true);
+              }}
+              onDelete={handleDelete}
+              onSelect={() => handleSelect(card)}
+              isSelected={selectedCards.some((c) => c.id === card.id)}
+              onDrop={(draggedIndex) =>
+                setDragState({ draggedIndex, hoverIndex: index })
+              }
+            />
           </div>
         ))}
       </div>
       <div className="share-section">
-        <button
-          onClick={handleShare}
-          disabled={selectedCards.length === 0}
-        >
+        <button onClick={handleShare} disabled={selectedCards.length === 0}>
           Share Selected
         </button>
       </div>
+      {isEditing && (
+        <Modal onClose={() => setIsEditing(false)}>
+          <EditForm
+            card={editCard}
+            onSave={(editedCard) => handleEdit(editedCard)}
+            onCancel={() => setIsEditing(false)}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
