@@ -1,6 +1,7 @@
 .flash-cards-container {
   flex-wrap: wrap;
   justify-content: space-around;
+
   .search-sort {
     display: flex;
     justify-content: space-between;
@@ -41,14 +42,16 @@
   }
 
   .cards {
+    margin: 0 100px;
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: space-around;
     .flash-card-wrapper {
-      display: flex;
+      flex-basis: calc(25% - 20px);
       margin-bottom: 20px;
       position: relative;
       width: 200px;
+
       .hidden-buttons {
         display: none;
         position: absolute;
@@ -85,4 +88,6 @@
       }
     }
   }
+
 }
+

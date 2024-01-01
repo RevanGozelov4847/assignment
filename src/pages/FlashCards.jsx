@@ -21,44 +21,15 @@ const FlashCards = () => {
     hoverIndex: null,
   });
 
-  const handleCreate = () => {
-    const currentTime = new Date().toISOString();
-    const createdCard = {
-      ...newCard,
-      id: Date.now(),
-      lastModified: currentTime,
-    };
-
-    fetch("http://localhost:3001/flashCards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(createdCard),
-    })
-      .then((response) => response.json())
-      .then((responseCard) => {
-        const cardWithLastModified = {
-          ...responseCard,
-          lastModified: currentTime,
-        };
-        dispatch({
-          type: ActionTypes.ADD_CARD,
-          payload: cardWithLastModified,
-        });
-      })
-      .catch((error) => console.error("Error creating card:", error));
-
-    setNewCard({ front: "", back: "", status: "Noted" });
-  };
-
   const handleEdit = (editedCard) => {
-    const currentTime = new Date().toISOString();
+    const currentTime = new Date();
+    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()} ${currentTime.getDate()} ${currentTime.toLocaleDateString('en-US', { month: 'long' })}`;
+  
     const updatedCard = {
       ...editedCard,
-      lastModified: currentTime,
+      lastModified: formattedTime,
     };
-
+  
     fetch(`http://localhost:3001/flashCards/${editedCard.id}`, {
       method: "PUT",
       headers: {
@@ -70,7 +41,7 @@ const FlashCards = () => {
       .then((responseCard) => {
         const cardWithLastModified = {
           ...responseCard,
-          lastModified: currentTime,
+          lastModified: formattedTime,
         };
         dispatch({
           type: ActionTypes.UPDATE_CARD,
@@ -78,11 +49,44 @@ const FlashCards = () => {
         });
       })
       .catch((error) => console.error("Error updating card:", error));
-
+  
     setEditCard(null);
     setIsEditing(false);
   };
-
+  
+  const handleCreate = () => {
+    const currentTime = new Date();
+    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()} ${currentTime.getDate()} ${currentTime.toLocaleDateString('en-US', { month: 'long' })}`;
+  
+    const createdCard = {
+      ...newCard,
+      id: Date.now(),
+      lastModified: formattedTime,
+    };
+  
+    fetch("http://localhost:3001/flashCards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(createdCard),
+    })
+      .then((response) => response.json())
+      .then((responseCard) => {
+        const cardWithLastModified = {
+          ...responseCard,
+          lastModified: formattedTime,
+        };
+        dispatch({
+          type: ActionTypes.ADD_CARD,
+          payload: cardWithLastModified,
+        });
+      })
+      .catch((error) => console.error("Error creating card:", error));
+  
+    setNewCard({ front: "", back: "", status: "Noted" });
+  };
+  
   const handleDelete = (id) => {
     fetch(`http://localhost:3001/flashCards/${id}`, {
       method: "DELETE",

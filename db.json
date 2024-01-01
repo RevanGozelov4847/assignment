@@ -1,25 +1,67 @@
 {
   "flashCards": [
     {
-      "front": "as",
-      "back": "qus",
+      "front": "What is the capital of France?",
+      "back": "Paris",
       "status": "Noted",
-      "id": 1703459570854,
-      "lastModified": "2023-12-25T23:54:56.640Z"
+      "id": 1704116307780,
+      "lastModified": "19:24:47 1 January"
     },
     {
-      "front": "mvbv",
-      "back": "Answer",
+      "front": "Who wrote 'Romeo and Juliet'?",
+      "back": "William Shakespeare",
       "status": "Noted",
-      "id": 1703459570854,
-      "lastModified": "2023-12-25T23:54:56.640Z"
+      "id": 1704116340293,
+      "lastModified": "17:39:00 1 January"
     },
     {
-      "front": "sual",
-      "back": "cavab",
-      "status": "Want to Learn",
-      "id": 1704107001934,
-      "lastModified": "2024-01-01T11:03:21.932Z"
+      "front": "What is the largest mammal?",
+      "back": "Blue Whale",
+      "status": "Noted",
+      "id": 1704116350271,
+      "lastModified": "17:39:24 1 January"
+    },
+    {
+      "front": "What is the square root of 144?",
+      "back": "12",
+      "status": "Noted",
+      "id": 1704116307780,
+      "lastModified": "17:39:49 1 January"
+    },
+    {
+      "front": "Who discovered gravity?",
+      "back": "Isaac Newton",
+      "status": "Noted",
+      "id": 1704116340293,
+      "lastModified": "17:39:00 1 January"
+    },
+    {
+      "front": "In which year did World War II end?",
+      "back": "1945",
+      "status": "Noted",
+      "id": 1704116350271,
+      "lastModified": "17:39:24 1 January"
+    },
+    {
+      "front": "What is the capital of Japan?",
+      "back": "Tokyo",
+      "status": "Noted",
+      "id": 1704116307780,
+      "lastModified": "17:39:49 1 January"
+    },
+    {
+      "front": "Who painted the Mona Lisa?",
+      "back": "Leonardo da Vinci",
+      "status": "Noted",
+      "id": 1704116340293,
+      "lastModified": "17:39:00 1 January"
+    },
+    {
+      "front": "What is the speed of light?",
+      "back": "299,792 kilometers per second",
+      "status": "Noted",
+      "id": 1704116350271,
+      "lastModified": "17:39:24 1 January"
     }
   ],
   "messages": [
@@ -28,6 +70,12 @@
       "email": "adsdsa@adad",
       "content": "dasdsa",
       "id": 1
+    },
+    {
+      "subject": "Salam",
+      "email": "asdadssad@sfdfds",
+      "content": "adsfeefafda",
+      "id": 2
     }
   ],
   "cardOrder": [

@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 
-const FlashCard = ({ card, onEdit, onDelete, onSelect, isSelected, onDrop }) => {
+const FlashCard = ({
+  card,
+  onEdit,
+  onDelete,
+  onSelect,
+  isSelected,
+  onDrop,
+}) => {
   const [showFront, setShowFront] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [editFront, setEditFront] = useState(card.front);
@@ -77,10 +84,14 @@ const FlashCard = ({ card, onEdit, onDelete, onSelect, isSelected, onDrop }) => 
             <p>Status: {card.status}</p>
           </div>
           {isHovered && (
-            <div className="front-actions">
+            <div className="card-actions">
               <div className="edit-delete-wrapper">
-                <button onClick={() => onEdit(card)}>Edit</button>
-                <button onClick={() => onDelete(card.id)}>Delete</button>
+                <button className="edit" onClick={() => onEdit(card)}>
+                  Edit
+                </button>
+                <button className="delete" onClick={() => onDelete(card.id)}>
+                  Delete
+                </button>
               </div>
             </div>
           )}
@@ -95,8 +106,12 @@ const FlashCard = ({ card, onEdit, onDelete, onSelect, isSelected, onDrop }) => 
           {isHovered && (
             <div className="card-actions">
               <div className="edit-delete-wrapper">
-                <button onClick={() => onEdit(card)}>Edit</button>
-                <button onClick={() => onDelete(card.id)}>Delete</button>
+                <button className="edit" onClick={() => onEdit(card)}>
+                  Edit
+                </button>
+                <button className="delete" onClick={() => onDelete(card.id)}>
+                  Delete
+                </button>
               </div>
             </div>
           )}
