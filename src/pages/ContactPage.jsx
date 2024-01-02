@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    subject: '',
-    email: '',
-    content: '',
+  // State to manage form data
+  const [formInputs, setFormInputs] = useState({
+    messageSubject: '',
+    emailAddress: '',
+    messageContent: '',
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Function to handle form submission
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
 
     try {
       const response = await fetch('http://localhost:3001/messages', {
@@ -16,15 +18,16 @@ const ContactPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formInputs),
       });
 
       if (response.ok) {
         console.log('Message sent successfully!');
-        setFormData({
-          subject: '',
-          email: '',
-          content: '',
+        // Clear form inputs on successful submission
+        setFormInputs({
+          messageSubject: '',
+          emailAddress: '',
+          messageContent: '',
         });
       } else {
         console.error('Failed to send message.');
@@ -34,10 +37,11 @@ const ContactPage = () => {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+  // Function to handle input changes
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormInputs((prevInputs) => ({
+      ...prevInputs,
       [name]: value,
     }));
   };
@@ -45,18 +49,18 @@ const ContactPage = () => {
   return (
     <div className='contact-page'>
       <h1>Contact Us</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleFormSubmit}>
         <label>
           Subject:
-          <input type="text" name="subject" value={formData.subject} onChange={handleChange} />
+          <input type="text" name="messageSubject" value={formInputs.messageSubject} onChange={handleInputChange} />
         </label>
         <label>
           Email:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
+          <input type="email" name="emailAddress" value={formInputs.emailAddress} onChange={handleInputChange} />
         </label>
         <label>
           Content:
-          <textarea name="content" value={formData.content} onChange={handleChange}></textarea>
+          <textarea name="messageContent" value={formInputs.messageContent} onChange={handleInputChange}></textarea>
         </label>
         <button type="submit">Submit</button>
       </form>

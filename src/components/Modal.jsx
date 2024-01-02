@@ -1,60 +1,64 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const Modal = ({ onClose, children }) => {
-  const modalRoot = document.getElementById("modal-root");
+const Modal = ({ closeHandler, content }) => {
+  const rootElement = document.getElementById("modal-root");
   const modalContainer = document.createElement("div");
 
   React.useEffect(() => {
-    modalRoot.appendChild(modalContainer);
+    rootElement.appendChild(modalContainer);
 
     return () => {
-      modalRoot.removeChild(modalContainer);
+      rootElement.removeChild(modalContainer);
     };
-  }, [modalContainer, modalRoot]);
+  }, [modalContainer, rootElement]);
 
-  return ReactDOM.createPortal(
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="modal-close-button" onClick={onClose}>
-          Close
-        </button>
-        {children}
-      </div>
-    </div>,
-    modalContainer
-  );
+  const renderModal = () => {
+    return ReactDOM.createPortal(
+      <div className="custom-modal-overlay">
+        <div className="custom-modal-content">
+          <button className="custom-modal-close-button" onClick={closeHandler}>
+            Close
+          </button>
+          {content}
+        </div>
+      </div>,
+      modalContainer
+    );
+  };
+
+  return renderModal();
 };
 
-const EditForm = ({ card, onSave, onCancel }) => {
-  const [editedCard, setEditedCard] = useState({ ...card });
+const EditForm = ({ cardInfo, onSaveHandler, onCancelHandler, onStatusChangeHandler }) => {
+  const [editedCardInfo, setEditedCardInfo] = useState({ ...cardInfo });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedCard((prevCard) => ({
-      ...prevCard,
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setEditedCardInfo((prevCardInfo) => ({
+      ...prevCardInfo,
       [name]: value,
     }));
   };
 
-  const handleSave = () => {
-    onSave(editedCard);
+  const handleSaveClick = () => {
+    onSaveHandler(editedCardInfo);
   };
 
   useEffect(() => {
-    setEditedCard({ ...card });
-  }, [card]);
+    setEditedCardInfo({ ...cardInfo });
+  }, [cardInfo]);
 
   return (
     <div>
-      <h2>Edit Card</h2>
+      <h2>Edit Card Information</h2>
       <form>
         <label>
           Question:
           <input
             type="text"
             name="front"
-            value={editedCard.front}
+            value={editedCardInfo.front}
             onChange={handleInputChange}
           />
         </label>
@@ -63,14 +67,28 @@ const EditForm = ({ card, onSave, onCancel }) => {
           <input
             type="text"
             name="back"
-            value={editedCard.back}
+            value={editedCardInfo.back}
             onChange={handleInputChange}
           />
         </label>
-        <button type="button" onClick={handleSave}>
-          Save
+        <label>
+          Card Status:
+          <select
+            value={editedCardInfo.status}
+            onChange={(event) => {
+              setEditedCardInfo({ ...editedCardInfo, status: event.target.value });
+              onStatusChangeHandler(event.target.value);
+            }}
+          >
+            <option value="Learned">Learned</option>
+            <option value="Want to Learn">Want to Learn</option>
+            <option value="Noted">Noted</option>
+          </select>
+        </label>
+        <button type="button" onClick={handleSaveClick}>
+          Save Card
         </button>
-        <button type="button" onClick={onCancel}>
+        <button type="button" onClick={onCancelHandler}>
           Cancel
         </button>
       </form>

@@ -23,13 +23,16 @@ const FlashCards = () => {
 
   const handleEdit = (editedCard) => {
     const currentTime = new Date();
-    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()} ${currentTime.getDate()} ${currentTime.toLocaleDateString('en-US', { month: 'long' })}`;
-  
+    const formattedTime = `${currentTime.getDate()} ${currentTime.toLocaleDateString(
+      "en-US",
+      { month: "long" }
+    ).slice(0, 3)} ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}`;
+    
     const updatedCard = {
       ...editedCard,
       lastModified: formattedTime,
     };
-  
+
     fetch(`http://localhost:3001/flashCards/${editedCard.id}`, {
       method: "PUT",
       headers: {
@@ -49,21 +52,24 @@ const FlashCards = () => {
         });
       })
       .catch((error) => console.error("Error updating card:", error));
-  
+
     setEditCard(null);
     setIsEditing(false);
   };
-  
+
   const handleCreate = () => {
     const currentTime = new Date();
-    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()} ${currentTime.getDate()} ${currentTime.toLocaleDateString('en-US', { month: 'long' })}`;
-  
+    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()} ${currentTime.getDate()} ${currentTime.toLocaleDateString(
+      "en-US",
+      { month: "long" }
+    )}`;
+
     const createdCard = {
       ...newCard,
       id: Date.now(),
       lastModified: formattedTime,
     };
-  
+
     fetch("http://localhost:3001/flashCards", {
       method: "POST",
       headers: {
@@ -83,10 +89,10 @@ const FlashCards = () => {
         });
       })
       .catch((error) => console.error("Error creating card:", error));
-  
+
     setNewCard({ front: "", back: "", status: "Noted" });
   };
-  
+
   const handleDelete = (id) => {
     fetch(`http://localhost:3001/flashCards/${id}`, {
       method: "DELETE",
@@ -125,49 +131,56 @@ const FlashCards = () => {
     )}`;
   };
 
-  const handleDrop = (draggedIndex, hoverIndex) => {
-    const updatedCards = [...state.cards];
-    const [draggedCard] = updatedCards.splice(draggedIndex, 1);
-    updatedCards.splice(hoverIndex, 0, draggedCard);
+  const handleContainerDragOver = (e) => {
+    e.preventDefault();
+  };
 
-    // Update local state with the new card order
-    dispatch({ type: ActionTypes.SET_CARDS, payload: updatedCards });
+  const handleContainerDrop = (e) => {
+    e.preventDefault();
 
-    // Update local storage with the new card order
-    localStorage.setItem(
-      "flashCardOrder",
-      JSON.stringify(updatedCards.map((card) => card.id))
-    );
+    const draggedIndex = dragState.draggedIndex;
+    const hoverIndex = sortedCards.length; 
 
-    // Update the card order directly in the db.json file using json-server
-    fetch("http://localhost:3001/cardOrder", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedCards.map((card) => card.id)),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log("Card order updated in db.json:", data))
-      .catch((error) => console.error("Error updating card order:", error));
+    if (draggedIndex !== hoverIndex) {
+      const updatedCards = [...state.cards];
+      const [draggedCard] = updatedCards.splice(draggedIndex, 1);
+      updatedCards.splice(hoverIndex, 0, draggedCard);
+
+      dispatch({ type: ActionTypes.SET_CARDS, payload: updatedCards });
+
+      localStorage.setItem(
+        "flashCardOrder",
+        JSON.stringify(updatedCards.map((card) => card.id))
+      );
+
+      fetch("http://localhost:3001/cardOrder", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedCards.map((card) => card.id)),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Card order updated in db.json:", data);
+        })
+        .catch((error) => {
+          console.error("Error updating card order:", error);
+        });
+    }
 
     setDragState({ draggedIndex: null, hoverIndex: null });
   };
 
   const filteredCards = state.cards.filter((card) => {
-    if (statusFilter !== "All" && card.status !== statusFilter) {
-      return false;
-    }
+    const isStatusMatch =
+      statusFilter === "All" || card.status === statusFilter;
 
-    if (searchText.trim() !== "") {
-      const searchTerm = searchText.toLowerCase();
-      return (
-        card.front.toLowerCase().includes(searchTerm) ||
-        card.back.toLowerCase().includes(searchTerm)
-      );
-    }
+    const isSearchMatch =
+      searchText.trim() === "" ||
+      card.front.toLowerCase().includes(searchText.toLowerCase().trim());
 
-    return true;
+    return isStatusMatch && isSearchMatch;
   });
 
   const sortedCards = [...filteredCards].sort((a, b) => {
@@ -187,7 +200,11 @@ const FlashCards = () => {
   }, [dispatch]);
 
   return (
-    <div className="flash-cards-container">
+    <div
+      className={`flash-cards-container ${
+        selectedCards.length > 0 ? "cards-selected" : ""
+      }`}
+    >
       <div className="search-sort">
         <div>
           <input
@@ -238,36 +255,45 @@ const FlashCards = () => {
             <option value="front">Alphabetic</option>
             <option value="lastModified">Last Modified Time</option>
           </select>
+          <button
+            className="share-button"
+            onClick={handleShare}
+            disabled={selectedCards.length === 0}
+          >
+            Share Selected
+          </button>
         </div>
       </div>
-      <div className="cards">
+      <div
+        className="cards"
+        onDragOver={handleContainerDragOver}
+        onDrop={handleContainerDrop}
+      >
         {sortedCards.map((card, index) => (
           <div
-            key={card.id}
-            className={`flash-card-wrapper ${dragState.draggedIndex === index ? "dragged" : ""}`}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={() => handleDrop(dragState.draggedIndex, index)}
-          >
-            <FlashCard
-              card={card}
-              onEdit={() => {
-                setEditCard(card);
-                setIsEditing(true);
-              }}
-              onDelete={handleDelete}
-              onSelect={() => handleSelect(card)}
-              isSelected={selectedCards.some((c) => c.id === card.id)}
-              onDrop={(draggedIndex) =>
-                setDragState({ draggedIndex, hoverIndex: index })
-              }
-            />
-          </div>
+          key={card.id}
+          className={`flash-card-wrapper ${
+            dragState.draggedIndex === index ? "dragged" : ""
+          }`}
+          draggable
+          onDragStart={(e) => {
+            e.dataTransfer.setData("index", index);
+            setDragState({ ...dragState, draggedIndex: index });
+          }}
+        >
+          <FlashCard
+            card={card}
+            onEdit={() => {
+              setEditCard(card);
+              setIsEditing(true);
+            }}
+            onDelete={handleDelete}
+            onSelect={() => handleSelect(card)}
+            isSelected={selectedCards.some((c) => c.id === card.id)}
+          />
+        </div>
+        
         ))}
-      </div>
-      <div className="share-section">
-        <button onClick={handleShare} disabled={selectedCards.length === 0}>
-          Share Selected
-        </button>
       </div>
       {isEditing && (
         <Modal onClose={() => setIsEditing(false)}>
@@ -275,6 +301,9 @@ const FlashCards = () => {
             card={editCard}
             onSave={(editedCard) => handleEdit(editedCard)}
             onCancel={() => setIsEditing(false)}
+            onStatusChange={(status) => {
+              console.log("Status changed to:", status);
+            }}
           />
         </Modal>
       )}

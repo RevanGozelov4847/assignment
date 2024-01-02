@@ -46,11 +46,13 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+
     .flash-card-wrapper {
       flex-basis: calc(25% - 20px);
       margin-bottom: 20px;
       position: relative;
       width: 200px;
+      transition: transform 0.3s ease;
 
       .hidden-buttons {
         display: none;
@@ -82,12 +84,30 @@
       }
 
       &:hover {
+        transform: scale(1.01);
         .hidden-buttons {
           opacity: 1;
         }
       }
+
+      &.dragged {
+        transform: scale(1.1);
+        border: 2px solid #4caf50;
+        z-index: 1;
+      }
     }
   }
 
-}
+  &.cards-selected {
+    .search-sort {
+      .share-button {
+        background-color: #d9534f;
+        cursor: not-allowed;
 
+        &:hover {
+          background-color: #d9534f;
+        }
+      }
+    }
+  }
+}
