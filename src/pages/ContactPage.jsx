@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 
 const ContactPage = () => {
-  // State to manage form data
   const [formInputs, setFormInputs] = useState({
     messageSubject: '',
     emailAddress: '',
     messageContent: '',
   });
 
-  // Function to handle form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
