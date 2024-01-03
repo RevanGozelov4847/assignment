@@ -1,64 +1,68 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const Modal = ({ closeHandler, content }) => {
-  const rootElement = document.getElementById("modal-root");
+const Modal = ({ onClose, children }) => {
+  const modalRoot = document.getElementById("modal-root");
   const modalContainer = document.createElement("div");
 
   React.useEffect(() => {
-    rootElement.appendChild(modalContainer);
+    modalRoot.appendChild(modalContainer);
 
     return () => {
-      rootElement.removeChild(modalContainer);
+      modalRoot.removeChild(modalContainer);
     };
-  }, [modalContainer, rootElement]);
+  }, [modalContainer, modalRoot]);
 
-  const renderModal = () => {
-    return ReactDOM.createPortal(
-      <div className="custom-modal-overlay">
-        <div className="custom-modal-content">
-          <button className="custom-modal-close-button" onClick={closeHandler}>
-            Close
-          </button>
-          {content}
-        </div>
-      </div>,
-      modalContainer
-    );
+  const modalStyle = {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
   };
 
-  return renderModal();
+  return ReactDOM.createPortal(
+    <div className="modal-overlay">
+      <div className="modal-content" style={modalStyle}>
+        <button className="modal-close-button" onClick={onClose}>
+          Close
+        </button>
+        {children}
+      </div>
+    </div>,
+    modalContainer
+  );
 };
 
-const EditForm = ({ cardInfo, onSaveHandler, onCancelHandler, onStatusChangeHandler }) => {
-  const [editedCardInfo, setEditedCardInfo] = useState({ ...cardInfo });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setEditedCardInfo((prevCardInfo) => ({
-      ...prevCardInfo,
+const EditForm = ({ card, onSave, onCancel }) => {
+  const [editedCard, setEditedCard] = useState({ ...card });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedCard((prevCard) => ({
+      ...prevCard,
       [name]: value,
     }));
   };
 
-  const handleSaveClick = () => {
-    onSaveHandler(editedCardInfo);
+  const handleSave = () => {
+    onSave(editedCard);
   };
 
   useEffect(() => {
-    setEditedCardInfo({ ...cardInfo });
-  }, [cardInfo]);
+    setEditedCard({ ...card });
+  }, [card]);
 
   return (
     <div>
-      <h2>Edit Card Information</h2>
+      <h2>Edit Card</h2>
       <form>
         <label>
           Question:
           <input
             type="text"
             name="front"
-            value={editedCardInfo.front}
+            value={editedCard.front}
             onChange={handleInputChange}
           />
         </label>
@@ -67,33 +71,33 @@ const EditForm = ({ cardInfo, onSaveHandler, onCancelHandler, onStatusChangeHand
           <input
             type="text"
             name="back"
-            value={editedCardInfo.back}
+            value={editedCard.back}
             onChange={handleInputChange}
           />
         </label>
         <label>
-          Card Status:
+          Status:
           <select
-            value={editedCardInfo.status}
-            onChange={(event) => {
-              setEditedCardInfo({ ...editedCardInfo, status: event.target.value });
-              onStatusChangeHandler(event.target.value);
-            }}
+            name="status"
+            value={editedCard.status}
+            onChange={handleInputChange}
           >
             <option value="Learned">Learned</option>
             <option value="Want to Learn">Want to Learn</option>
             <option value="Noted">Noted</option>
           </select>
         </label>
-        <button type="button" onClick={handleSaveClick}>
-          Save Card
+        <button type="button" onClick={handleSave}>
+          Save
         </button>
-        <button type="button" onClick={onCancelHandler}>
+        <button type="button" onClick={onCancel}>
           Cancel
         </button>
       </form>
     </div>
   );
 };
+
+
 
 export { Modal, EditForm };

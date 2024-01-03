@@ -34,7 +34,9 @@
         background-color: #45a049;
       }
     }
-
+    .cards-selected {
+      background-color: #d9534f;
+    }
     span {
       font-weight: bold;
       margin-right: 10px;
@@ -52,7 +54,6 @@
       margin-bottom: 20px;
       position: relative;
       width: 200px;
-      transition: transform 0.3s ease;
 
       .hidden-buttons {
         display: none;
@@ -84,29 +85,35 @@
       }
 
       &:hover {
-        transform: scale(1.01);
         .hidden-buttons {
           opacity: 1;
         }
       }
 
-      &.dragged {
-        transform: scale(1.1);
-        border: 2px solid #4caf50;
-        z-index: 1;
+      input[type="checkbox"] {
+        margin-right: 5px;
+        cursor: pointer;
+
+        &:checked {
+          background-color: #4caf50;
+        }
       }
     }
   }
 
-  &.cards-selected {
-    .search-sort {
-      .share-button {
-        background-color: #d9534f;
-        cursor: not-allowed;
+  .share-section {
+    margin-top: 20px;
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
 
-        &:hover {
-          background-color: #d9534f;
-        }
+      &:hover {
+        background-color: #45a049;
       }
     }
   }

@@ -134,13 +134,6 @@
       "lastModified": "16:55:25 2 January"
     },
     {
-      "front": "What is the capital of Australia?",
-      "back": "Canberra",
-      "status": "Learned",
-      "id": 17041163502902,
-      "lastModified": "15:30:53 2 January"
-    },
-    {
       "front": "Who painted the Mona Lisa?",
       "back": "Leonardo da Vinci",
       "status": "Noted",
@@ -292,7 +285,7 @@
       "back": "Ottawa",
       "status": "Noted",
       "id": 170411635027149,
-      "lastModified": "12:48:45 2 January"
+      "lastModified": "20:49:8 3 January"
     },
     {
       "front": "Who discovered the double helix structure of DNA?",
@@ -314,20 +307,6 @@
       "status": "Noted",
       "id": 170411635027152,
       "lastModified": "13:35:00 2 January"
-    },
-    {
-      "front": "ads",
-      "back": "ads",
-      "status": "Noted",
-      "id": 1704196740929,
-      "lastModified": "15:59:0 2 January"
-    },
-    {
-      "front": "das",
-      "back": "ads",
-      "status": "Noted",
-      "id": 1704196845536,
-      "lastModified": "16:0:45 2 January"
     }
   ],
   "messages": [
@@ -348,6 +327,12 @@
       "email": "asdsa@ads",
       "content": "adsasd",
       "id": 3
+    },
+    {
+      "messageSubject": "snfg",
+      "emailAddress": "gozelov200403@gmail.com",
+      "messageContent": "ydhmgh",
+      "id": 4
     }
   ]
 }

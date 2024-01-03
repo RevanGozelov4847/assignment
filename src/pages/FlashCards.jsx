@@ -20,14 +20,15 @@ const FlashCards = () => {
     draggedIndex: null,
     hoverIndex: null,
   });
+  const areCardsSelected = selectedCards.length > 0;
 
   const handleEdit = (editedCard) => {
     const currentTime = new Date();
-    const formattedTime = `${currentTime.getDate()} ${currentTime.toLocaleDateString(
+    const formattedTime = `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()} ${currentTime.getDate()} ${currentTime.toLocaleDateString(
       "en-US",
       { month: "long" }
-    ).slice(0, 3)} ${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}`;
-    
+    )}`;
+
     const updatedCard = {
       ...editedCard,
       lastModified: formattedTime,
@@ -131,56 +132,49 @@ const FlashCards = () => {
     )}`;
   };
 
-  const handleContainerDragOver = (e) => {
-    e.preventDefault();
-  };
+  const handleDrop = (draggedIndex, hoverIndex) => {
+    const updatedCards = [...state.cards];
+    const [draggedCard] = updatedCards.splice(draggedIndex, 1);
+    updatedCards.splice(hoverIndex, 0, draggedCard);
 
-  const handleContainerDrop = (e) => {
-    e.preventDefault();
+    // Update local state with the new card order
+    dispatch({ type: ActionTypes.SET_CARDS, payload: updatedCards });
 
-    const draggedIndex = dragState.draggedIndex;
-    const hoverIndex = sortedCards.length; 
+    // Update local storage with the new card order
+    localStorage.setItem(
+      "flashCardOrder",
+      JSON.stringify(updatedCards.map((card) => card.id))
+    );
 
-    if (draggedIndex !== hoverIndex) {
-      const updatedCards = [...state.cards];
-      const [draggedCard] = updatedCards.splice(draggedIndex, 1);
-      updatedCards.splice(hoverIndex, 0, draggedCard);
-
-      dispatch({ type: ActionTypes.SET_CARDS, payload: updatedCards });
-
-      localStorage.setItem(
-        "flashCardOrder",
-        JSON.stringify(updatedCards.map((card) => card.id))
-      );
-
-      fetch("http://localhost:3001/cardOrder", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedCards.map((card) => card.id)),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Card order updated in db.json:", data);
-        })
-        .catch((error) => {
-          console.error("Error updating card order:", error);
-        });
-    }
+    // Update the card order directly in the db.json file using json-server
+    fetch("http://localhost:3001/cardOrder", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedCards.map((card) => card.id)),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Card order updated in db.json:", data))
+      .catch((error) => console.error("Error updating card order:", error));
 
     setDragState({ draggedIndex: null, hoverIndex: null });
   };
 
   const filteredCards = state.cards.filter((card) => {
-    const isStatusMatch =
-      statusFilter === "All" || card.status === statusFilter;
+    if (statusFilter !== "All" && card.status !== statusFilter) {
+      return false;
+    }
 
-    const isSearchMatch =
-      searchText.trim() === "" ||
-      card.front.toLowerCase().includes(searchText.toLowerCase().trim());
+    if (searchText.trim() !== "") {
+      const searchTerm = searchText.toLowerCase();
+      return (
+        card.front.toLowerCase().includes(searchTerm) ||
+        card.back.toLowerCase().includes(searchTerm)
+      );
+    }
 
-    return isStatusMatch && isSearchMatch;
+    return true;
   });
 
   const sortedCards = [...filteredCards].sort((a, b) => {
@@ -200,11 +194,7 @@ const FlashCards = () => {
   }, [dispatch]);
 
   return (
-    <div
-      className={`flash-cards-container ${
-        selectedCards.length > 0 ? "cards-selected" : ""
-      }`}
-    >
+    <div className="flash-cards-container">
       <div className="search-sort">
         <div>
           <input
@@ -256,43 +246,40 @@ const FlashCards = () => {
             <option value="lastModified">Last Modified Time</option>
           </select>
           <button
-            className="share-button"
+            className={`share-button ${
+              areCardsSelected ? "cards-selected" : ""
+            }`}
             onClick={handleShare}
-            disabled={selectedCards.length === 0}
+            disabled={!areCardsSelected}
           >
             Share Selected
           </button>
         </div>
       </div>
-      <div
-        className="cards"
-        onDragOver={handleContainerDragOver}
-        onDrop={handleContainerDrop}
-      >
+      <div className="cards">
         {sortedCards.map((card, index) => (
           <div
-          key={card.id}
-          className={`flash-card-wrapper ${
-            dragState.draggedIndex === index ? "dragged" : ""
-          }`}
-          draggable
-          onDragStart={(e) => {
-            e.dataTransfer.setData("index", index);
-            setDragState({ ...dragState, draggedIndex: index });
-          }}
-        >
-          <FlashCard
-            card={card}
-            onEdit={() => {
-              setEditCard(card);
-              setIsEditing(true);
-            }}
-            onDelete={handleDelete}
-            onSelect={() => handleSelect(card)}
-            isSelected={selectedCards.some((c) => c.id === card.id)}
-          />
-        </div>
-        
+            key={card.id}
+            className={`flash-card-wrapper ${
+              dragState.draggedIndex === index ? "dragged" : ""
+            }`}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => handleDrop(dragState.draggedIndex, index)}
+          >
+            <FlashCard
+              card={card}
+              onEdit={() => {
+                setEditCard(card);
+                setIsEditing(true);
+              }}
+              onDelete={handleDelete}
+              onSelect={() => handleSelect(card)}
+              isSelected={selectedCards.some((c) => c.id === card.id)}
+              onDrop={(draggedIndex) =>
+                setDragState({ draggedIndex, hoverIndex: index })
+              }
+            />
+          </div>
         ))}
       </div>
       {isEditing && (
@@ -301,9 +288,6 @@ const FlashCards = () => {
             card={editCard}
             onSave={(editedCard) => handleEdit(editedCard)}
             onCancel={() => setIsEditing(false)}
-            onStatusChange={(status) => {
-              console.log("Status changed to:", status);
-            }}
           />
         </Modal>
       )}
