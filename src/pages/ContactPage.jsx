@@ -21,7 +21,6 @@ const ContactPage = () => {
 
       if (response.ok) {
         console.log('Message sent successfully!');
-        // Clear form inputs on successful submission
         setFormInputs({
           messageSubject: '',
           emailAddress: '',
@@ -35,7 +34,6 @@ const ContactPage = () => {
     }
   };
 
-  // Function to handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormInputs((prevInputs) => ({

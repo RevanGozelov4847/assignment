@@ -65,7 +65,7 @@ const FlashCard = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onDragOver={handleDragOver}
-      onDrop={handleDrop}
+      onDrop={handleDrop} 
       draggable
       onDragStart={handleDragStart}
     >

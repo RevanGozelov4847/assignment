@@ -12,4 +12,3 @@ root.render(
     </FlashCardsProvider>
   </React.StrictMode>,
 );
-

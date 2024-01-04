@@ -15,6 +15,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.0",
     "react-scripts": "^5.0.1",
     "sass": "^1.69.5",
@@ -26,9 +27,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "start:server": "json-server --watch db.json --port 3001",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start:server": "json-server --watch db.json --port 3001"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +50,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.1.0"
+    "gh-pages": "^6.1.1"
   }
 }
