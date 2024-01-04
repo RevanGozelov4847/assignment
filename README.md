@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# Flash Card App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
+Welcome to the Flash Card App, a comprehensive and interactive learning tool. This application, built with React, is designed to facilitate a dynamic learning experience through the use of flashcards. It's perfect for anyone looking to improve their knowledge in various subjects.
 
-## Available Scripts
+## Table of Contents
+- [Description](#description)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Running the Application](#running-the-application)
+  - [Starting the React Application](#starting-the-react-application)
+  - [Starting the JSON-Server](#starting-the-json-server)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [Contact](#contact)
+- [Acknowledgments](#acknowledgments)
 
-In the project directory, you can run:
+## Description
+The Flash Card App is designed for users who seek an effective and engaging method to study and memorize information. It utilizes flashcards that can be created, viewed, edited, and deleted, providing a versatile platform for learning.
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
+Before you begin, ensure you have the following installed:
+- Node.js: Required to run the React application and install dependencies.
+- npm (Node Package Manager): Used for managing JavaScript packages.
+- Git: Necessary for cloning the repository from GitHub.
+- JSON-Server: This acts as a mock backend for storing and managing flashcards.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Installation
+1. **Clone the Repository**
+   - Run the following command in your terminal to clone the project repository:
+     ```bash
+     git clone https://github.com/RevanGozelov4847/assignment.git 
+     ```
+   - Move into the project directory:
+     ```bash
+     cd assignment 
+     ```
+2. **Install Node Dependencies**
+   - Install all required Node modules:
+     ```bash
+     npm install 
+     ```
+3. **Install JSON-Server Globally**
+   - If not already installed, set up JSON-Server globally:
+     ```bash
+     npm install -g json-server 
+     ```
 
-### `npm test`
+## Running the Application
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Starting the React Application
+1. **Launch the React App**
+   - Use this command to start the React app:
+     ```bash
+     npm start 
+     ```
+   - The app will automatically open in your web browser at http://localhost:3000.
 
-### `npm run build`
+### Starting the JSON-Server
+1. **Activate the JSON-Server**
+   - Open a new terminal and run the following to start JSON-Server, which will utilize db.json as a database:
+     ```bash
+     json-server --watch db.json --port 3000
+     ```
+   - Access the server at http://localhost:3001. Ensure you use a different port if 3000 is used by the React application.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
+The application provides various functionalities:
+- **Creating Flashcards**: Add new cards with questions and answers.
+- **Browsing Flashcards**: Scroll through and review flashcards.
+- **Editing Flashcards**: Modify the content of existing flashcards.
+- **Deleting Flashcards**: Remove flashcards from the collection.
+- **Sorting and Filtering**: Organize flashcards based on different criteria for more focused study sessions.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributing
+Interested in contributing to the Flash Card App? We welcome contributions, whether it's fixing bugs, improving documentation, or adding new features. Please feel free to fork the repository and submit pull requests.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Contact
+For any queries or further information, please reach out to Revan Gozelov at rgozalov14226@ada.edu.az
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Acknowledgments
+- Special thanks to everyone who contributed to the development and improvement of this application.
+- Hat tip to anyone whose code was used as inspiration or reference.
+- Gratitude to the community for continuous feedback and support.
