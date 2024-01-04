@@ -11,7 +11,7 @@ const ContactPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3001/messages', {
+      const response = await fetch('http://localhost:3000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

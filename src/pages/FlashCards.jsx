@@ -34,7 +34,7 @@ const FlashCards = () => {
       lastModified: formattedTime,
     };
 
-    fetch(`http://localhost:3001/flashCards/${editedCard.id}`, {
+    fetch(`http://localhost:3000/flashCards/${editedCard.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const FlashCards = () => {
       lastModified: formattedTime,
     };
 
-    fetch("http://localhost:3001/flashCards", {
+    fetch("http://localhost:3000/flashCards", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +95,7 @@ const FlashCards = () => {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:3001/flashCards/${id}`, {
+    fetch(`http://localhost:3000/flashCards/${id}`, {
       method: "DELETE",
     })
       .then(() => dispatch({ type: ActionTypes.DELETE_CARD, payload: id }))
@@ -143,7 +143,7 @@ const FlashCards = () => {
 
     dispatch({ type: ActionTypes.SET_CARDS, payload: updatedCards });
 
-    fetch("http://localhost:3001/cardOrder", {
+    fetch("http://localhost:3000/cardOrder", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -176,7 +176,7 @@ const FlashCards = () => {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3001/flashCards")
+    fetch("http://localhost:3000/flashCards")
       .then((response) => response.json())
       .then((data) => dispatch({ type: ActionTypes.SET_CARDS, payload: data }))
       .catch((error) => console.error("Error fetching data:", error));
